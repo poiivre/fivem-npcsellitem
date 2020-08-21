@@ -3,7 +3,7 @@
 ###### Allow Players to | Permet au Joueurs de 
 - [x] Sell Legals Item to NPC ( for jobs )  	| | Vendre des Item legaux au PNJ ( Pour le Boulot )
 - [x] Deal Item to NPC ( Drugs/..)          	| | Dealer des Items au PNJ ( Drogues/..)
-- [x] Cops Get Alerts when Dealing (1/15)   	| | La Police est informé des Deals (1/15)
+- [x] Cops Get Alerts when Dealing (1/Chance)   	| | La Police est informé des Deals (1/Chance)
 
 # [EN] Selling Item to NPC Script for Fivem [ ESX ]
 Created by Selene Desna on August 15 & 16, 2020 for [ Holliday's RP https://discord.gg/rzPAeFr ]
