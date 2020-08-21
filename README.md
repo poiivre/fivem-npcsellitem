@@ -14,6 +14,7 @@ If you need help to modify it, you can contact me on GitHub.
 ### Config :
 Warning : Changing variables that are not in the following list can broke the script !
 ```
+Chance  :   Chance for police to get alerted when selling illegal items ( the chance is 1/Chance )
 Notif1  :   Message when you have sold ( will get the number and name name of item before and money received after )
 Notif2  :   Message when nobody is nearby
 Notif3  :   Message when the NPC or player is in a car
@@ -40,6 +41,7 @@ Si vous avez besoin d'aide afin de le modifier contactez moi sur GitHub.
 ### Config :
 Attention : Changer des variable autre que les suivante peut bloqué le script !
 ```
+Chance  :   Chance pour la police de recevoir une alerte lors d'une vente illegale ( la chance est de 1/Chance )
 Notif1  :   Message lors d'une vente ( avec le nombre et nom de l'item avant le message et son prix a la fin )
 Notif2  :   Message quand aucun pnj n'est trouvé
 Notif3  :   Message lorsque le joueur ou pnj est en véhicule
