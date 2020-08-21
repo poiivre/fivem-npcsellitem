@@ -9,7 +9,7 @@
 --	Si vous avez besoin d'aide
 --	pour modifier ce script
 --	contacter moi sur github
---	ou cr�ez une issue sur la 
+--	ou créez une issue sur la 
 --	page github du script
 
 
@@ -17,13 +17,14 @@
 --- Variables ---
 -----------------
 
+local Chance = 10
 local Notif1 = ' Vendu ! ~n~~g~Vous recevez $'
-local Notif2 = 'Personne à Proximitée'
+local Notif2 = 'Personne Ã  ProximitÃ©e'
 local Notif3 = 'Vente Impossible en Vehicule'
-local Notif4 = 'Vous ne pouvez pas/plus Vendre à cette Personne'
-local Notif5 = 'Le Personne à refusé !'
-local Notif6 = 'Vous ne posseder aucun article à vendre'
-local Notif7 = 'Un Citoyen signal un Trafic de Stupéfiant !'
+local Notif4 = 'Vous ne pouvez pas/plus Vendre Ã  cette Personne'
+local Notif5 = 'Le Personne Ã  refusÃ© !'
+local Notif6 = 'Vous ne posseder aucun article Ã  vendre'
+local Notif7 = 'Un Citoyen signal un Trafic de StupÃ©fiant !'
 
 BlacklistNPC = {}
 
@@ -176,7 +177,7 @@ function RechercheNPC(item, itemLabel, itemPrix, itemlegal )
 		-- Conditions Autorisant la Vente --
 		------------------------------------
 
-		-- NPC blacklist� ?
+		-- NPC blacklisté ?
 		local NPCblacklister = false
 
               	for i=1, #BlacklistNPC, 1 do if BlacklistNPC[i] == NPCproche then NPCblacklister = true end end
@@ -193,7 +194,7 @@ function RechercheNPC(item, itemLabel, itemPrix, itemlegal )
 		-- NPC mort ?
 		if not IsPedDeadOrDying(NPCproche, 1) then	
 	
-		-- Item Ill�gal ? + Alerte Police
+		-- Item Illégal ? + Alerte Police
 		if illegal(itemlegal) then 
 	
 			local Prix = itemPrix * ( math.random(90,110) / 100 )
@@ -223,7 +224,8 @@ function illegal(legal)
 
 	else 
 
-		local random = math.random(1,1)
+		Chance = tonumber(Chance)
+		local random = math.random(1,Chance)
 		if random == 1 then
 
 			
