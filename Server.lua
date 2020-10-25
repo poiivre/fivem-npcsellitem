@@ -23,24 +23,39 @@ RegisterServerEvent("seln_SellItem:checkInventaire")
 AddEventHandler("seln_SellItem:checkInventaire", function(Notif)
   	if possedeItems() then
     		TriggerClientEvent("seln_SellItem:OuvrirInventaire", source)
- 	else 	TriggerClientEvent('esx:showNotification', source, Notif)
+ 	else 		TriggerClientEvent('esx:showAdvancedNotification', source, '[ Ventes ]', Notif, nil, 'CHAR_BIKESITE', 0)
 	end
 end)
 
 RegisterServerEvent("seln_SellItem:VendreItem")
-AddEventHandler("seln_SellItem:VendreItem", function(item, Prix, Notif, Combien)
+AddEventHandler("seln_SellItem:VendreItem", function(item, Prix, Notif, Combien, Sale)
 	local xPlayer = ESX.GetPlayerFromId(source)
 
-	xPlayer.removeInventoryItem(item, Combien)
-	Prix = Prix*Combien
-	xPlayer.addMoney(Prix)
-	
-	local itemlabel = ESX.GetItemLabel(item)
+	if xPlayer.getInventoryItem(item).count > Combien then
+		xPlayer.removeInventoryItem(item, Combien)
+		Prix = Prix*Combien
 
-	Notif = Combien..' '..itemlabel..Notif..Prix
-
- 	TriggerClientEvent('esx:showNotification', source, Notif)
+		if Sale == false then 		xPlayer.addMoney(Prix)
+		else				xPlayer.addAccountMoney('black_money', Prix)
 	
+		local itemlabel = ESX.GetItemLabel(item)
+		Notif = Combien..Notif..Prix
+ 		TriggerClientEvent('esx:showAdvancedNotification', source, '[ Ventes ]', Notif, nil, 'CHAR_BIKESITE', 0)
+
+	else 
+		Combien = xPlayer.getInventoryItem(item).count
+
+		xPlayer.removeInventoryItem(item, Combien)
+		Prix = Prix*Combien
+		xPlayer.addMoney(Prix)
+	
+		local itemlabel = ESX.GetItemLabel(item)
+
+		Notif = Combien..' '..itemlabel..Notif..Prix
+
+ 		TriggerClientEvent('esx:showAdvancedNotification', source, '[ Ventes ]', Notif, nil, 'CHAR_BIKESITE', 0)
+
+	end
 	
 end)
 
@@ -72,3 +87,4 @@ function possedeItems()
 
   	if possede then return true else return false end
 end
+
