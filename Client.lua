@@ -1,4 +1,5 @@
 
+
 --[[	GitHub : Selene-Desna	  ]]--
 
 --	If you need help editing 
@@ -17,14 +18,14 @@
 --- Variables ---
 -----------------
 
-local Chance = 10
-local Notif1 = ' Vendu ! ~n~~g~Vous recevez $'
-local Notif2 = 'Personne Ã  ProximitÃ©e'
-local Notif3 = 'Vente Impossible en Vehicule'
-local Notif4 = 'Vous ne pouvez pas/plus Vendre Ã  cette Personne'
-local Notif5 = 'Le Personne Ã  refusÃ© !'
-local Notif6 = 'Vous ne posseder aucun article Ã  vendre'
-local Notif7 = 'Un Citoyen signal un Trafic de StupÃ©fiant !'
+local Chance = 4
+local Notif1 = ' Vendu pour $'
+local Notif2 = '~r~Personne Ã  ProximitÃ©e'
+local Notif3 = '~r~Vente Impossible en Vehicule'
+local Notif4 = '~r~La Personne Ã  refusÃ© !' -- deja acheter
+local Notif5 = '~r~La Personne Ã  refusÃ© !' -- appel police
+local Notif6 = '~r~Aucun Article'
+local Notif7 = '~y~Trafic de StupÃ©fiant en cours !'
 
 BlacklistNPC = {}
 
@@ -66,7 +67,7 @@ Citizen.CreateThread(function()
  	while true do Wait(10)
 
 		-- Ouverture du menu F11 ?
-    		if IsControlJustPressed(0, 344) then
+    		if IsControlJustPressed(0, 344) and GetLastInputMethod( 0 ) then
         		TriggerServerEvent("seln_SellItem:checkInventaire", Notif6)
     		end
 
@@ -94,10 +95,10 @@ AddEventHandler('seln_SellItem:PhotoMugshot', function(serverid)
 	local rue = GetStreetNameFromHashKey(r1)
         local zone = GetNameOfZone(Joueur.x, Joueur.y, Joueur.z)                                                                              
     	
-	local mugshot, mugshotStr = ESX.Game.GetPedMugshot(serverid)
-	ESX.ShowAdvancedNotification('~o~Alerte BCSO :', '~o~['..zone..']', '~y~[ '..rue..' ]~n~~y~'..Notif7, mugshotStr, 1)
-	UnregisterPedheadshot(mugshot)	
+	ESX.ShowAdvancedNotification('~o~Alerte BCSO :', '~o~['..zone..']', Notif7,  'CHAR_CALL911', 1)
 
+
+	
 	blipscrimescene(Joueur.x, Joueur.y, Joueur.z)
 end)
 
@@ -105,7 +106,6 @@ end)
 -----------------
 --- Fonctions ---
 -----------------
-
 
 function ouvreInventaire()
 	local elements = {}
@@ -118,7 +118,14 @@ function ouvreInventaire()
       		
       			for k,v in ipairs(Config.Items) do
       				if invitem.count > 0 and invitem.name == v.item then
-                		table.insert(elements, { legal = v.legal , itemprix = v.prix , itemlabel = invitem.label ,label = invitem.label ..  '<span></span>|  ' .. invitem.count  , type = "item_standard", count = invitem.count, value = invitem.name})
+                		table.insert(elements, { 	sale = v.sale ,	
+								legal = v.legal , 
+								itemprix = v.prix ,
+								itemlabel = invitem.label ,label = invitem.label ..  '<span></span>|  ' .. invitem.count  , 
+								type = "item_standard", 
+								count = invitem.count, 
+								value = invitem.name 
+							})
             		end
       			end
         	end    
@@ -135,8 +142,10 @@ function ouvreInventaire()
 			local itemPrix 	= data.current.itemprix
         		local invcount 	= data.current.count
 			local itemlegal = data.current.legal
+			local itemsale	= data.current.sale
 			
-			RechercheNPC(item, itemLabel, itemPrix, itemlegal)
+			menu.close()
+			RechercheNPC(item, itemLabel, itemPrix, itemlegal, itemsale)
 
         	end,function(data, menu) 
 		menu.close() 
@@ -145,7 +154,7 @@ function ouvreInventaire()
     	end)
 end
 
-function RechercheNPC(item, itemLabel, itemPrix, itemlegal )
+function RechercheNPC(item, itemLabel, itemPrix, itemlegal, itemsale )
 
 	local Joueur = GetPlayerPed(-1)
 	local Coords    = GetEntityCoords(Joueur)
@@ -181,11 +190,11 @@ function RechercheNPC(item, itemLabel, itemPrix, itemlegal )
 		local NPCblacklister = false
 
               	for i=1, #BlacklistNPC, 1 do if BlacklistNPC[i] == NPCproche then NPCblacklister = true end end
-		if NPCblacklister then ESX.ShowNotification(Notif4) else
+		if NPCblacklister then ESX.ShowAdvancedNotification('[ Action Impossible ]', '~o~[ '..Notif4..' ]', nil , 'CHAR_BLOCKED', 0) else
 
 		-- Joueur ou NPC en voiture ?
 		if IsPedInAnyVehicle(Joueur) or IsPedInAnyVehicle(NPCproche) then 
-			ESX.ShowNotification(Notif3)
+			ESX.ShowAdvancedNotification('[ Action Impossible ]', '~o~[ '..Notif3..' ]', nil , 'CHAR_BLOCKED', 0) SortirVoiture()
 		else
 
 		-- NPC Humain ?
@@ -200,22 +209,24 @@ function RechercheNPC(item, itemLabel, itemPrix, itemlegal )
 			local Prix = itemPrix * ( math.random(90,110) / 100 )
 			Prix = math.floor(Prix)
 			Combien = math.random(1,4)
-			TriggerServerEvent("seln_SellItem:VendreItem", item, Prix, Notif1, Combien)
+			TriggerServerEvent("seln_SellItem:VendreItem", item, Prix, Notif1, Combien, itemsale)
 			table.insert( BlacklistNPC , NPCproche )
 		
 		else table.insert( BlacklistNPC , NPCproche )
 		end
-
-		else ESX.ShowNotification(Notif4)
+		else ESX.ShowAdvancedNotification('[ Action Impossible ]', '~o~[ '..Notif4..' ]', nil , 'CHAR_BLOCKED', 0)
 		end -- Mort
- 
-		else ESX.ShowNotification(Notif4)
+		else ESX.ShowAdvancedNotification('[ Action Impossible ]', '~o~[ '..Notif4..' ]', nil , 'CHAR_BLOCKED', 0)
 		end -- Humain
 		end -- Voiture
 		end -- Blacklist
 
-	else ESX.ShowNotification(Notif2)
+	else ESX.ShowAdvancedNotification('[ Action Impossible ]', '~o~[ '..Notif2..' ]', nil , 'CHAR_BLOCKED', 0)
+
 	end
+
+	ouvreInventaire()
+
 end
 
 function illegal(legal)
@@ -224,12 +235,11 @@ function illegal(legal)
 
 	else 
 
-		Chance = tonumber(Chance)
-		local random = math.random(1,Chance)
+		local random = math.random(1,4)
 		if random == 1 then
 
 			
-			ESX.ShowNotification(Notif5)
+			ESX.ShowAdvancedNotification('[ Action Impossible ]', '~o~[ '..Notif5..' ]', nil , 'CHAR_BLOCKED', 0)
 			local serverid = GetPlayerServerId(PlayerId())
 			TriggerServerEvent('seln_SellItem:AlertePolice', serverid)
 			retour = false
@@ -288,6 +298,8 @@ function blipscrimescene(gx, gy, gz)
 		
 	end
 end
+
+
 
 
 
