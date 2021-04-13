@@ -37,7 +37,8 @@ AddEventHandler("seln_SellItem:VendreItem", function(item, Prix, Notif, Combien,
 
 		if Sale == false then 		xPlayer.addMoney(Prix)
 		else				xPlayer.addAccountMoney('black_money', Prix)
-	
+		end
+			
 		local itemlabel = ESX.GetItemLabel(item)
 		Notif = Combien..Notif..Prix
  		TriggerClientEvent('esx:showAdvancedNotification', source, '[ Ventes ]', Notif, nil, 'CHAR_BIKESITE', 0)
