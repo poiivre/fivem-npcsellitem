@@ -64,11 +64,12 @@ end)
 
 Citizen.CreateThread(function()
  	while ESX == nil do Wait(100) end
- 	while true do Wait(10)
+ 	while true do Wait(0)
 
 		-- Ouverture du menu F11 ?
     		if IsControlJustPressed(0, 344) and GetLastInputMethod( 0 ) then
-        		TriggerServerEvent("seln_SellItem:checkInventaire", Notif6)
+        		TriggerServerEvent("seln_SellItem:checkInventaire", Notif6)	
+		
     		end
 
   	end
