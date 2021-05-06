@@ -1,4 +1,5 @@
-Discord Dev Scripts : https://discord.gg/5EDP4KH
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/D1D44EGNM)
+
 ### [EN]  [FR]  https://youtu.be/5cGgQSnExMg
 
 ###### Allow Players to | Permet au Joueurs de 
